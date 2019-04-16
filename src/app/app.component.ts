@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
     const width = 600 - margin.left - margin.right;
     const height = 300 - margin.top - margin.bottom;
 
-    const	parseDate = d3.timeFormat('%Y-%m').parse;
+    const	parseDate = d3.timeFormat('%Y-%m');
 
     const x = d3.scaleBand().rangeRound([0, width], .05);
 
@@ -33,7 +33,9 @@ export class AppComponent implements OnInit {
         .attr('transform',
               'translate(' + margin.left + ',' + margin.top + ')');
 
-    d3.csv('/assets/data.csv', (error, data) => {
+    d3.csv('/assets/data.csv').then((data) => {
+
+      console.log(data);
 
       data.forEach((d) => {
           d.date = parseDate(d.date);
@@ -68,7 +70,7 @@ export class AppComponent implements OnInit {
         .enter().append('rect')
           .style('fill', 'steelblue')
           .attr('x', (d) => x(d.date) )
-          .attr('width', x.rangeBand())
+          .attr('width', x.bandwidth())
           .attr('y', (d) => y(d.value) )
           .attr('height', (d) => height - y(d.value));
 
